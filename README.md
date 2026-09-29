@@ -83,6 +83,7 @@ backend python_servers
     server server2 127.0.0.1:8002 check
 ```
 2. Скриншот проверки
+
 ![Cкриншот 1](https://github.com/wolverine2034/8-03-hw/blob/main/img/1.png?raw=true)
 
 ---
@@ -147,10 +148,17 @@ backend no_backend
     http-request return status 404 content-type "text/plain" string "Unknown Host"
 ```
 2. Скриншот проверки
+
 ![Cкриншот 2](https://github.com/wolverine2034/8-03-hw/blob/main/img/2.png?raw=true)
+
 3. Скриншот проверки с сортировкой, для наглядности 
+
 ![Cкриншот 3](https://github.com/wolverine2034/8-03-hw/blob/main/img/3.png?raw=true)
+
 4. Скриншот проверки без указания доменного имени
+
 ![Cкриншот 4](https://github.com/wolverine2034/8-03-hw/blob/main/img/4.png?raw=true)
+
 5. Скриншот проверки с указанием стороннего домена
+
 ![Cкриншот 5](https://github.com/wolverine2034/8-03-hw/blob/main/img/5.png?raw=true)
