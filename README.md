@@ -65,6 +65,7 @@
 ---
 #### Ответ:
 1. Скриншот 1
+
 ![Cкриншот 1](https://github.com/wolverine2034/8-03-hw/blob/main/img/1.png?raw=true)
 
 2. Скриншот 2
