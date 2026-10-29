@@ -1,4 +1,6 @@
-# Домашнее задание к занятию  «Очереди RabbitMQ»
+# Домашнее задание к занятию «Очереди RabbitMQ»
+
+### Выполнил: Фамилия Имя
 
 ### Инструкция по выполнению домашнего задания
 
@@ -84,27 +86,27 @@ $ rabbitmqadmin get queue='hello'
 #### Ответ:
 1. Скриншот 1
 
-   ![Cкриншот 1](https://github.com/wolverine2034/8-03-hw/blob/main/img/1.png?raw=true)
+   ![Скриншот 1](img/1.png)
 
 2. Скриншот 2
 
-   ![Cкриншот 2](https://github.com/wolverine2034/8-03-hw/blob/main/img/2.png?raw=true)
+   ![Скриншот 2](img/2.png)
 
    Скриншот 3
 
-   ![Cкриншот 3](https://github.com/wolverine2034/8-03-hw/blob/main/img/3.png?raw=true)
+   ![Скриншот 3](img/3.png)
    
    Скриншот 4
 
-   ![Cкриншот 4](https://github.com/wolverine2034/8-03-hw/blob/main/img/4.png?raw=true)
+   ![Скриншот 4](img/4.png)
 
 3. Скриншот 5
    
-   ![Cкриншот 5](https://github.com/wolverine2034/8-03-hw/blob/main/img/5.png?raw=true)
+   ![Скриншот 5](img/5.png)
    
    Скриншот 6
    
-   ![Cкриншот 6](https://github.com/wolverine2034/8-03-hw/blob/main/img/6.png?raw=true)
+   ![Скриншот 6](img/6.png)
    
    Вывод команд:
 ```shell
