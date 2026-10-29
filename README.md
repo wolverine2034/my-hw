@@ -1,4 +1,4 @@
-# Домашнее задание к занятию «ELK»
+# Домашнее задание к занятию  «Очереди RabbitMQ»
 
 ### Инструкция по выполнению домашнего задания
 
@@ -17,65 +17,258 @@
 
 ---
 
-## Дополнительные ресурсы
+### Задание 1. Установка RabbitMQ
 
-При выполнении задания используйте дополнительные ресурсы:
-- [docker-compose elasticsearch + kibana](11-03/docker-compose.yaml);
-- [поднимаем elk в docker](https://www.elastic.co/guide/en/elasticsearch/reference/7.17/docker.html);
-- [поднимаем elk в docker с filebeat и docker-логами](https://www.sarulabs.com/post/5/2019-08-12/sending-docker-logs-to-elasticsearch-and-kibana-with-filebeat.html);
-- [конфигурируем logstash](https://www.elastic.co/guide/en/logstash/7.17/configuration.html);
-- [плагины filter для logstash](https://www.elastic.co/guide/en/logstash/current/filter-plugins.html);
-- [конфигурируем filebeat](https://www.elastic.co/guide/en/beats/libbeat/5.3/config-file-format.html);
-- [привязываем индексы из elastic в kibana](https://www.elastic.co/guide/en/kibana/7.17/index-patterns.html);
-- [как просматривать логи в kibana](https://www.elastic.co/guide/en/kibana/current/discover.html);
-- [решение ошибки increase vm.max_map_count elasticsearch](https://stackoverflow.com/questions/42889241/how-to-increase-vm-max-map-count).
+Используя Vagrant или VirtualBox, создайте виртуальную машину и установите RabbitMQ.
+Добавьте management plug-in и зайдите в веб-интерфейс.
 
-**Примечание**: если у вас недоступны официальные образы, можете найти альтернативные варианты в DockerHub, например, [такой](https://hub.docker.com/layers/bitnami/elasticsearch/7.17.13/images/sha256-8084adf6fa1cf24368337d7f62292081db721f4f05dcb01561a7c7e66806cc41?context=explore).
-
-### Задание 1. Elasticsearch 
-
-Установите и запустите Elasticsearch, после чего поменяйте параметр cluster_name на случайный. 
-
-*Приведите скриншот команды 'curl -X GET 'localhost:9200/_cluster/health?pretty', сделанной на сервере с установленным Elasticsearch. Где будет виден нестандартный cluster_name*.
+*Итогом выполнения домашнего задания будет приложенный скриншот веб-интерфейса RabbitMQ.*
 
 ---
 
-### Задание 2. Kibana
+### Задание 2. Отправка и получение сообщений
 
-Установите и запустите Kibana.
+Используя приложенные скрипты, проведите тестовую отправку и получение сообщения.
+Для отправки сообщений необходимо запустить скрипт producer.py.
 
-*Приведите скриншот интерфейса Kibana на странице http://<ip вашего сервера>:5601/app/dev_tools#/console, где будет выполнен запрос GET /_cluster/health?pretty*.
+Для работы скриптов вам необходимо установить Python версии 3 и библиотеку Pika.
+Также в скриптах нужно указать IP-адрес машины, на которой запущен RabbitMQ, заменив localhost на нужный IP.
+
+```shell script
+$ pip install pika
+```
+
+Зайдите в веб-интерфейс, найдите очередь под названием hello и сделайте скриншот.
+После чего запустите второй скрипт consumer.py и сделайте скриншот результата выполнения скрипта
+
+*В качестве решения домашнего задания приложите оба скриншота, сделанных на этапе выполнения.*
+
+Для закрепления материала можете попробовать модифицировать скрипты, чтобы поменять название очереди и отправляемое сообщение.
 
 ---
 
-### Задание 3. Logstash
+### Задание 3. Подготовка HA кластера
 
-Установите и запустите Logstash и Nginx. С помощью Logstash отправьте access-лог Nginx в Elasticsearch. 
+Используя Vagrant или VirtualBox, создайте вторую виртуальную машину и установите RabbitMQ.
+Добавьте в файл hosts название и IP-адрес каждой машины, чтобы машины могли видеть друг друга по имени.
 
-*Приведите скриншот интерфейса Kibana, на котором видны логи Nginx.*
+Пример содержимого hosts файла:
+```shell script
+$ cat /etc/hosts
+192.168.0.10 rmq01
+192.168.0.11 rmq02
+```
+После этого ваши машины могут пинговаться по имени.
 
----
+Затем объедините две машины в кластер и создайте политику ha-all на все очереди.
 
-### Задание 4. Filebeat. 
+*В качестве решения домашнего задания приложите скриншоты из веб-интерфейса с информацией о доступных нодах в кластере и включённой политикой.*
 
-Установите и запустите Filebeat. Переключите поставку логов Nginx с Logstash на Filebeat. 
+Также приложите вывод команды с двух нод:
 
-*Приведите скриншот интерфейса Kibana, на котором видны логи Nginx, которые были отправлены через Filebeat.*
+```shell script
+$ rabbitmqctl cluster_status
+```
+
+Для закрепления материала снова запустите скрипт producer.py и приложите скриншот выполнения команды на каждой из нод:
+
+```shell script
+$ rabbitmqadmin get queue='hello'
+```
+
+После чего попробуйте отключить одну из нод, желательно ту, к которой подключались из скрипта, затем поправьте параметры подключения в скрипте consumer.py на вторую ноду и запустите его.
+
+*Приложите скриншот результата работы второго скрипта.*
 
 ---
 #### Ответ:
 1. Скриншот 1
 
-![Cкриншот 1](https://github.com/wolverine2034/8-03-hw/blob/main/img/1.png?raw=true)
+   ![Cкриншот 1](https://github.com/wolverine2034/8-03-hw/blob/main/img/1.png?raw=true)
 
 2. Скриншот 2
 
-![Cкриншот 2](https://github.com/wolverine2034/8-03-hw/blob/main/img/2.png?raw=true)
+   ![Cкриншот 2](https://github.com/wolverine2034/8-03-hw/blob/main/img/2.png?raw=true)
 
-3. Скриншот 3
+   Скриншот 3
 
-![Cкриншот 3](https://github.com/wolverine2034/8-03-hw/blob/main/img/3.png?raw=true)
+   ![Cкриншот 3](https://github.com/wolverine2034/8-03-hw/blob/main/img/3.png?raw=true)
+   
+   Скриншот 4
 
-4. Скриншот 4
+   ![Cкриншот 4](https://github.com/wolverine2034/8-03-hw/blob/main/img/4.png?raw=true)
 
-![Cкриншот 4](https://github.com/wolverine2034/8-03-hw/blob/main/img/4.png?raw=true)
+3. Скриншот 5
+   
+   ![Cкриншот 5](https://github.com/wolverine2034/8-03-hw/blob/main/img/5.png?raw=true)
+   
+   Скриншот 6
+   
+   ![Cкриншот 6](https://github.com/wolverine2034/8-03-hw/blob/main/img/6.png?raw=true)
+   
+   Вывод команд:
+```shell
+(.venv) root@srv-pterodactyl:/opt/rabbitmq-lab# docker exec rmq01 rabbitmqctl cl                                                                                                                                                             uster_status
+Cluster status of node rabbit@rmq01 ...
+Basics
+
+Cluster name: rabbit@rmq01
+Total CPU cores available cluster-wide: 12
+
+Disk Nodes
+
+rabbit@rmq01
+rabbit@rmq02
+
+Running Nodes
+
+rabbit@rmq01
+rabbit@rmq02
+
+Versions
+
+rabbit@rmq01: RabbitMQ 3.13.7 on Erlang 26.2.5.16
+rabbit@rmq02: RabbitMQ 3.13.7 on Erlang 26.2.5.16
+
+CPU Cores
+
+Node: rabbit@rmq01, available CPU cores: 6
+Node: rabbit@rmq02, available CPU cores: 6
+
+Maintenance status
+
+Node: rabbit@rmq01, status: not under maintenance
+Node: rabbit@rmq02, status: not under maintenance
+
+Alarms
+
+(none)
+
+Network Partitions
+
+(none)
+
+Listeners
+
+Node: rabbit@rmq01, interface: [::], port: 15672, protocol: http, purpose: HTTP                                                                                                                                                              API
+Node: rabbit@rmq01, interface: [::], port: 15692, protocol: http/prometheus, pur                                                                                                                                                             pose: Prometheus exporter API over HTTP
+Node: rabbit@rmq01, interface: [::], port: 25672, protocol: clustering, purpose:                                                                                                                                                              inter-node and CLI tool communication
+Node: rabbit@rmq01, interface: [::], port: 5672, protocol: amqp, purpose: AMQP 0                                                                                                                                                             -9-1 and AMQP 1.0
+Node: rabbit@rmq02, interface: [::], port: 15672, protocol: http, purpose: HTTP                                                                                                                                                              API
+Node: rabbit@rmq02, interface: [::], port: 15692, protocol: http/prometheus, pur                                                                                                                                                             pose: Prometheus exporter API over HTTP
+Node: rabbit@rmq02, interface: [::], port: 25672, protocol: clustering, purpose:                                                                                                                                                              inter-node and CLI tool communication
+Node: rabbit@rmq02, interface: [::], port: 5672, protocol: amqp, purpose: AMQP 0                                                                                                                                                             -9-1 and AMQP 1.0
+
+Feature flags
+
+Flag: classic_mirrored_queue_version, state: enabled
+Flag: classic_queue_type_delivery_support, state: enabled
+Flag: detailed_queues_endpoint, state: enabled
+Flag: direct_exchange_routing_v2, state: enabled
+Flag: drop_unroutable_metric, state: enabled
+Flag: empty_basic_get_metric, state: enabled
+Flag: feature_flags_v2, state: enabled
+Flag: implicit_default_bindings, state: enabled
+Flag: khepri_db, state: disabled
+Flag: listener_records_in_ets, state: enabled
+Flag: maintenance_mode_status, state: enabled
+Flag: message_containers, state: enabled
+Flag: message_containers_deaths_v2, state: enabled
+Flag: quorum_queue, state: enabled
+Flag: quorum_queue_non_voters, state: enabled
+Flag: restart_streams, state: enabled
+Flag: stream_filtering, state: enabled
+Flag: stream_queue, state: enabled
+Flag: stream_sac_coordinator_unblock_group, state: enabled
+Flag: stream_single_active_consumer, state: enabled
+Flag: stream_update_config_command, state: enabled
+Flag: tracking_records_in_ets, state: enabled
+Flag: user_limits, state: enabled
+Flag: virtual_host_metadata, state: enabled
+(.venv) root@srv-pterodactyl:/opt/rabbitmq-lab# docker exec rmq02 rabbitmqctl cl                                                                                                                                                             uster_status
+Cluster status of node rabbit@rmq02 ...
+Basics
+
+Cluster name: rabbit@rmq02
+Total CPU cores available cluster-wide: 12
+
+Disk Nodes
+
+rabbit@rmq01
+rabbit@rmq02
+
+Running Nodes
+
+rabbit@rmq01
+rabbit@rmq02
+
+Versions
+
+rabbit@rmq02: RabbitMQ 3.13.7 on Erlang 26.2.5.16
+rabbit@rmq01: RabbitMQ 3.13.7 on Erlang 26.2.5.16
+
+CPU Cores
+
+Node: rabbit@rmq02, available CPU cores: 6
+Node: rabbit@rmq01, available CPU cores: 6
+
+Maintenance status
+
+Node: rabbit@rmq02, status: not under maintenance
+Node: rabbit@rmq01, status: not under maintenance
+
+Alarms
+
+(none)
+
+Network Partitions
+
+(none)
+
+Listeners
+
+Node: rabbit@rmq02, interface: [::], port: 15672, protocol: http, purpose: HTTP                                                                                                                                                              API
+Node: rabbit@rmq02, interface: [::], port: 15692, protocol: http/prometheus, pur                                                                                                                                                             pose: Prometheus exporter API over HTTP
+Node: rabbit@rmq02, interface: [::], port: 25672, protocol: clustering, purpose:                                                                                                                                                              inter-node and CLI tool communication
+Node: rabbit@rmq02, interface: [::], port: 5672, protocol: amqp, purpose: AMQP 0                                                                                                                                                             -9-1 and AMQP 1.0
+Node: rabbit@rmq01, interface: [::], port: 15672, protocol: http, purpose: HTTP                                                                                                                                                              API
+Node: rabbit@rmq01, interface: [::], port: 15692, protocol: http/prometheus, pur                                                                                                                                                             pose: Prometheus exporter API over HTTP
+Node: rabbit@rmq01, interface: [::], port: 25672, protocol: clustering, purpose:                                                                                                                                                              inter-node and CLI tool communication
+Node: rabbit@rmq01, interface: [::], port: 5672, protocol: amqp, purpose: AMQP 0                                                                                                                                                             -9-1 and AMQP 1.0
+
+Feature flags
+
+Flag: classic_mirrored_queue_version, state: enabled
+Flag: classic_queue_type_delivery_support, state: enabled
+Flag: detailed_queues_endpoint, state: enabled
+Flag: direct_exchange_routing_v2, state: enabled
+Flag: drop_unroutable_metric, state: enabled
+Flag: empty_basic_get_metric, state: enabled
+Flag: feature_flags_v2, state: enabled
+Flag: implicit_default_bindings, state: enabled
+Flag: khepri_db, state: disabled
+Flag: listener_records_in_ets, state: enabled
+Flag: maintenance_mode_status, state: enabled
+Flag: message_containers, state: enabled
+Flag: message_containers_deaths_v2, state: enabled
+Flag: quorum_queue, state: enabled
+Flag: quorum_queue_non_voters, state: enabled
+Flag: restart_streams, state: enabled
+Flag: stream_filtering, state: enabled
+Flag: stream_queue, state: enabled
+Flag: stream_sac_coordinator_unblock_group, state: enabled
+Flag: stream_single_active_consumer, state: enabled
+Flag: stream_update_config_command, state: enabled
+Flag: tracking_records_in_ets, state: enabled
+Flag: user_limits, state: enabled
+Flag: virtual_host_metadata, state: enabled
+(.venv) root@srv-pterodactyl:/opt/rabbitmq-lab#
+```
+   
+   Скриншот 7
+
+   ![Cкриншот 7](https://github.com/wolverine2034/8-03-hw/blob/main/img/7.png?raw=true)
+
+   Скриншот 8
+   
+   ![Cкриншот 8](https://github.com/wolverine2034/8-03-hw/blob/main/img/8.png?raw=true)
